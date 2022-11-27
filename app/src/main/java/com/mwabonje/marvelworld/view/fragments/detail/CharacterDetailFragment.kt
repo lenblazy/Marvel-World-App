@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mwabonje.marvelworld.database.MarvelEntity
 import com.mwabonje.marvelworld.databinding.FragmentCharacterDetailBinding
-import com.mwabonje.marvelworld.models.DefaultResponse
 import dagger.android.support.DaggerFragment
 
 private const val CHARACTER = "character"
@@ -18,7 +18,7 @@ private const val CHARACTER = "character"
  */
 class CharacterDetailFragment : DaggerFragment() {
 
-    private var character: DefaultResponse? = null
+    private var character: MarvelEntity? = null
 
     private var _binding: FragmentCharacterDetailBinding? = null
     private val binding get() = _binding!!
@@ -41,8 +41,8 @@ class CharacterDetailFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            tvTitle.text = ""
-            tvDescription.text = ""
+            tvTitle.text = character?.characterName
+            tvDescription.text = character?.characterDescription
         }
     }
 

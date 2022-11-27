@@ -1,25 +1,25 @@
 package com.mwabonje.marvelworld.view.fragments.list
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mwabonje.marvelworld.database.MarvelEntity
 import com.mwabonje.marvelworld.databinding.AdapterCharacterBinding
 
 class CharactersAdapter(
-    val list: List<MarvelEntity>,
+    private val list: MutableList<MarvelEntity>,
     private val clickListener: CharacterListener,
-) :
-    ListAdapter<MarvelEntity, CharactersAdapter.ViewHolder>(CharactersDiffCallback()) {
+) : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
 
-    var data = list
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    fun setCharactersList(updatedUserList: List<MarvelEntity>) {
+        val diffResult = DiffUtil.calculateDiff(CharactersDiffCallback(list, updatedUserList))
+        list.clear()
+        list.addAll(updatedUserList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    override fun getItemCount() = list.size
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,15 +27,14 @@ class CharactersAdapter(
     ): ViewHolder = ViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(clickListener, data[position])
+        holder.bind(clickListener, list[position])
 
-    class ViewHolder(val binding: AdapterCharacterBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: AdapterCharacterBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: CharacterListener, item: MarvelEntity) {
             binding.apply {
                 val name = item.characterName
-                Log.d("APAPA", "JINA NI $name")
-                tvInitial.text = name.substring(0, 1)
+                tvInitial.text = name.substring(0, 2)
                 tvName.text = name
                 clHolder.setOnClickListener { clickListener.onClick(item) }
             }
@@ -53,15 +52,31 @@ class CharactersAdapter(
 
 }
 
-class CharactersDiffCallback : DiffUtil.ItemCallback<MarvelEntity>() {
+class CharactersDiffCallback(
+    private val oldList: List<MarvelEntity>,
+    private val newList: List<MarvelEntity>,
+) : DiffUtil.Callback() {
 
-    override fun areItemsTheSame(oldItem: MarvelEntity, newItem: MarvelEntity): Boolean {
-        return oldItem.id == newItem.id
+    override fun getOldListSize(): Int {
+        return oldList.size
     }
 
-    override fun areContentsTheSame(oldItem: MarvelEntity, newItem: MarvelEntity): Boolean {
-        return oldItem == newItem
+    override fun getNewListSize(): Int {
+        return newList.size
     }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        return super.getChangePayload(oldItemPosition, newItemPosition)
+    }
+
 }
 
 /**

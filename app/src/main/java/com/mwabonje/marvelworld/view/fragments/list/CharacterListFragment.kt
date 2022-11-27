@@ -1,12 +1,12 @@
 package com.mwabonje.marvelworld.view.fragments.list
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import com.mwabonje.marvelworld.R
 import com.mwabonje.marvelworld.database.MarvelEntity
 import com.mwabonje.marvelworld.databinding.FragmentCharacterListBinding
 import com.mwabonje.marvelworld.network.Status
@@ -37,7 +37,7 @@ class CharacterListFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = CharactersAdapter(listOf(), CharacterListener {
+        val adapter = CharactersAdapter(mutableListOf(), CharacterListener {
             navigate(it)
         })
         binding.rvCharacters.adapter = adapter
@@ -47,10 +47,11 @@ class CharacterListFragment : DaggerFragment() {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         binding.progressCircular.visibility = View.GONE
-                        Log.d("KANDO", "${resource.data}")
-                        adapter.submitList(resource.data ?: listOf())
+                        binding.rvCharacters.visibility = View.VISIBLE
+                        adapter.setCharactersList(resource.data ?: mutableListOf())
                     }
                     Status.ERROR -> {
+                        //todo show error dialog
                         binding.progressCircular.visibility = View.GONE
                     }
                     Status.LOADING -> {
@@ -63,9 +64,9 @@ class CharacterListFragment : DaggerFragment() {
     }
 
     private fun navigate(character: MarvelEntity) {
-        //todo: send request to get character's details
-        Toast.makeText(requireContext(), character.characterName, Toast.LENGTH_SHORT).show()
-//        findNavController().navigate(R.id.fragment)
+        val args = Bundle()
+        args.putParcelable("character", character)
+        findNavController().navigate(R.id.characterDetailFragment, args)
     }
 
     override fun onDestroy() {
