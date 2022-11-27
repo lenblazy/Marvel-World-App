@@ -89,7 +89,7 @@ interface MarvelApi {
     @GET("characters")
     suspend fun sendRequest(): Response<DefaultResponse>
 
-    @GET("characters")
-    suspend fun characterDetailsRequest(@Query("") id: String): Response<DefaultResponse>
+    @GET("characters/{id}")
+    suspend fun characterDetailsRequest(@Path(value = "id", encoded = true) id: String): Response<DefaultResponse>
 
 }

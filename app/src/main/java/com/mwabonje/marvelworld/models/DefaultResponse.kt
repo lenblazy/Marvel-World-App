@@ -79,11 +79,9 @@ data class Story(
 @Parcelize
 data class MyItem(
 
-    @SerializedName("resourceURI")
-    var linkUrl: String,
-
     @SerializedName("name")
     var name: String,
+
 ) : Parcelable
 
 

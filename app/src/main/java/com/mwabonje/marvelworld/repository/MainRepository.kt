@@ -14,7 +14,7 @@ class MainRepository @Inject constructor(
     private val api: MarvelApi, private val dao: MarvelDao,
 ) {
 
-    fun getMovies() = liveData(Dispatchers.IO) {
+    fun getCharacters() = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null)) //for the loading stuff
         try {
             //Pick data from local db
@@ -37,6 +37,25 @@ class MainRepository @Inject constructor(
                     dao.insertAll(list)
                     emit(Resource.success(data = dao.getMarvelCharacters()))
                     //
+                }
+            }else{
+                emit(Resource.error(data = null, message = response.message()))
+            }
+        } catch (e: Exception) {
+            emit(
+                Resource.error(data = null, message = e.message ?: "Error Occurred!"))
+        }
+    }
+
+    fun getCharacterDetails(id: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null)) //for the loading stuff
+        try {
+            //make network call
+            val response = api.characterDetailsRequest(id)
+            if (response.isSuccessful) {
+                val dataRes = response.body()?.data?.marvelCharacters?.get(0)
+                dataRes?.let {
+                    emit(Resource.success(data = it))
                 }
             }else{
                 emit(Resource.error(data = null, message = response.message()))

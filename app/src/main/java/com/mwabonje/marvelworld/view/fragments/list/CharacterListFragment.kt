@@ -1,5 +1,6 @@
 package com.mwabonje.marvelworld.view.fragments.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -51,8 +52,8 @@ class CharacterListFragment : DaggerFragment() {
                         adapter.setCharactersList(resource.data ?: mutableListOf())
                     }
                     Status.ERROR -> {
-                        //todo show error dialog
                         binding.progressCircular.visibility = View.GONE
+//                        showError(resource.message ?: "An Error occurred")
                     }
                     Status.LOADING -> {
                         binding.progressCircular.visibility = View.VISIBLE
@@ -60,8 +61,18 @@ class CharacterListFragment : DaggerFragment() {
                 }
             }
         }
-
     }
+
+//    private fun showError(msg: String){
+//        val builder = AlertDialog.Builder(requireContext())
+//
+//        builder.setTitle("Error")
+//        builder.setMessage(msg)
+//
+//        builder.setNegativeButton("Close") { dialog, which -> }
+//
+//        builder.show()
+//    }
 
     private fun navigate(character: MarvelEntity) {
         val args = Bundle()
