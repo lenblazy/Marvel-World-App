@@ -19,7 +19,7 @@ class MainRepository @Inject constructor(
         try {
             //Pick data from local db
             val data = dao.getMarvelCharacters()
-            if (data.isNotEmpty()){
+            if (data.isNotEmpty()) {
                 emit(Resource.success(data = data))
             }
 
@@ -38,7 +38,7 @@ class MainRepository @Inject constructor(
                     emit(Resource.success(data = dao.getMarvelCharacters()))
                     //
                 }
-            }else{
+            } else {
                 emit(Resource.error(data = null, message = response.message()))
             }
         } catch (e: Exception) {
@@ -57,7 +57,7 @@ class MainRepository @Inject constructor(
                 dataRes?.let {
                     emit(Resource.success(data = it))
                 }
-            }else{
+            } else {
                 emit(Resource.error(data = null, message = response.message()))
             }
         } catch (e: Exception) {

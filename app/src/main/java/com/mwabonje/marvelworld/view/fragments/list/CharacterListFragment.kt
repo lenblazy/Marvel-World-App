@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.mwabonje.marvelworld.R
 import com.mwabonje.marvelworld.database.MarvelEntity
@@ -53,6 +54,10 @@ class CharacterListFragment : DaggerFragment() {
                     }
                     Status.ERROR -> {
                         binding.progressCircular.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext()
+                            , resource.message ?: "An Error occurred"
+                            , Toast.LENGTH_SHORT).show()
 //                        showError(resource.message ?: "An Error occurred")
                     }
                     Status.LOADING -> {
@@ -63,16 +68,16 @@ class CharacterListFragment : DaggerFragment() {
         }
     }
 
-//    private fun showError(msg: String){
-//        val builder = AlertDialog.Builder(requireContext())
-//
-//        builder.setTitle("Error")
-//        builder.setMessage(msg)
-//
-//        builder.setNegativeButton("Close") { dialog, which -> }
-//
-//        builder.show()
-//    }
+    private fun showError(msg: String){
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("Error")
+        builder.setMessage(msg)
+
+        builder.setNegativeButton("Close") { dialog, which -> }
+
+        builder.show()
+    }
 
     private fun navigate(character: MarvelEntity) {
         val args = Bundle()
