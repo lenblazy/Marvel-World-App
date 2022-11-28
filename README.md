@@ -12,4 +12,6 @@
   - Room Database - for caching the responses (lists) from the Marvel API.
   - LiveData/MutableLiveData
   - Observer pattern
-  - Paging
+  
+### How to run
+The apk file is available for download a this [link](https://github.com/lenblazy/Marvel-World-App/blob/main/apk/marvel-app.apk)
